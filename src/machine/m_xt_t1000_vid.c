@@ -728,7 +728,7 @@ t1200xe_init(const device_t *info)
     /* Occupy memory between 0xB8000 and 0xBFFFF */
     mem_mapping_add(&t1000->mapping, 0xb8000, 0x8000, t1000_read, NULL, NULL, t1000_write, NULL, NULL, NULL, 0, t1000);
     /* Respond to CGA I/O ports */
-    io_sethandler(0x03d0, 0x000c, t1000_in, NULL, NULL, t1000_out, NULL, NULL, t1000);
+    io_sethandler(0x03c0, 0x0030, t1000_in, NULL, NULL, t1000_out, NULL, NULL, t1000);
 
     /* Default attribute mapping is 4 */
     t1000->attrmap = 4;

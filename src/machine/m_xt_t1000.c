@@ -145,6 +145,7 @@ typedef struct {
     /* CONFIG.SYS drive. */
     uint8_t t1000_nvram[160];
     uint8_t t1200_nvram[2048];
+    uint8_t t1200xe_nvram[32768];
 
     /* System control registers */
     uint8_t sys_ctl[16];
@@ -758,6 +759,25 @@ write_t1200_nvram(uint32_t addr, uint8_t value, void *priv)
     sys->t1200_nvram[addr & 0x7FF] = value;
 }
 
+static uint8_t
+read_t1200xe_nvram(uint32_t addr, void *priv)
+{
+    t1000_t *sys = (t1000_t *) priv;
+
+    return sys->t1200xe_nvram[addr & 0x7FF];
+}
+
+static void
+write_t1200xe_nvram(uint32_t addr, uint8_t value, void *priv)
+{
+    t1000_t *sys = (t1000_t *) priv;
+
+    if (sys->t1200xe_nvram[addr & 0x7FF] != value)
+        nvr_dosave = 1;
+
+    sys->t1200xe_nvram[addr & 0x7FF] = value;
+}
+
 /* Port 0xC8 controls the ROM drive */
 static uint8_t
 t1000_read_rom_ctl(uint16_t addr, void *priv)
@@ -907,6 +927,7 @@ machine_xt_t1000_init(const machine_t *model)
 int
 machine_xt_t1200_init(const machine_t *model)
 {
+    FILE *f;
     int pg;
 
     int ret;
@@ -1008,12 +1029,12 @@ machine_xt_t1200xe_init(const machine_t *model)
     io_sethandler(0xe0, 16,
                   read_ctl, NULL, NULL, write_ctl, NULL, NULL, &t1000);
 
-    machine_common_init(model);
+    machine_at_common_ide_init(model);
 
     mem_mapping_add(&t1000.nvr_mapping,
                     0x000e8000, 32768,
-                    read_t1200_nvram, NULL, NULL,
-                    write_t1200_nvram, NULL, NULL,
+                    read_t1200xe_nvram, NULL, NULL,
+                    write_t1200xe_nvram, NULL, NULL,
                     NULL, MEM_MAPPING_EXTERNAL, &t1000);
 
     pit_devs[0].set_out_func(pit_devs[0].data, 1, pit_refresh_timer_xt);
@@ -1023,8 +1044,8 @@ machine_xt_t1200xe_init(const machine_t *model)
 
     tc8521_init(&t1000.nvr, model->nvrmask + 1);
 
-    t1200_nvr_load();
-    nvr_set_ven_save(t1200_nvr_save);
+    t1200xe_nvr_load();
+    nvr_set_ven_save(t1200xe_nvr_save);
 
     if (gfxcard[0] == VID_INTERNAL)
         device_add(&t1200xe_video_device);
@@ -1073,6 +1094,38 @@ t1000_configsys_save(void)
         fclose(f);
     }
 }
+
+static void
+t1200xe_state_load(void)
+{
+    FILE *f;
+    int   size;
+
+    memset(t1000.t1200xe_nvram, 0, sizeof(t1000.t1200xe_nvram));
+    f = plat_fopen(nvr_path("t1200xe_state.nvr"), "rb");
+    if (f != NULL) {
+        size = sizeof(t1000.t1200xe_nvram);
+        if (fread(t1000.t1200xe_nvram, 1, size, f) != size)
+            fatal("t1200xe_state_load(): Error reading data\n");
+        fclose(f);
+    }
+}
+
+static void
+t1200xe_state_save(void)
+{
+    FILE *f;
+    int   size;
+
+    f = plat_fopen(nvr_path("t1200xe_state.nvr"), "wb");
+    if (f != NULL) {
+        size = sizeof(t1000.t1200xe_nvram);
+        if (fwrite(t1000.t1200xe_nvram, 1, size, f) != size)
+            fatal("t1200xe_state_save(): Error writing data\n");
+        fclose(f);
+    }
+}
+
 
 static void
 t1200_state_load(void)
@@ -1160,4 +1213,18 @@ t1200_nvr_save(void)
 {
     t1000_emsboard_save();
     t1200_state_save();
+}
+
+void
+t1200xe_nvr_load(void)
+{
+    t1000_emsboard_load();
+    t1200xe_state_load();
+}
+
+void
+t1200xe_nvr_save(void)
+{
+    t1000_emsboard_save();
+    t1200xe_state_save();
 }

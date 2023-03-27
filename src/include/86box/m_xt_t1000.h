@@ -56,4 +56,7 @@ extern void t1000_nvr_save(void);
 extern void t1200_nvr_load(void);
 extern void t1200_nvr_save(void);
 
+extern void t1200xe_nvr_load(void);
+extern void t1200xe_nvr_save(void);
+
 #endif /*MACHINE_T1000_H*/

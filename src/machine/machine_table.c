@@ -393,7 +393,7 @@ const machine_t machines[] = {
         .net_device = NULL
     },
     {
-        .name = "[8088] IBM PC Convertible (1986)",
+        .name = "[8088] IBM PC Convertible (1987)",
         .internal_name = "ibm5140",
         .type = MACHINE_TYPE_8088,
         .chipset = MACHINE_CHIPSET_DISCRETE,
@@ -1795,44 +1795,6 @@ const machine_t machines[] = {
         .kbc_p1 = 0xff00,
         .gpio = 0xffffffff,
         .device = &cga_device,
-        .fdc_device = NULL,
-        .sio_device = NULL,
-        .vid_device = NULL,
-        .snd_device = NULL,
-        .net_device = NULL
-    },
-    {
-        .name = "[8088] IBM PC Convertible",
-        .internal_name = "ibm5140",
-        .type = MACHINE_TYPE_8088,
-        .chipset = MACHINE_CHIPSET_DISCRETE,
-        .init = machine_ibm5140_init,
-        .pad = 0,
-        .pad0 = 0,
-        .pad1 = MACHINE_AVAILABLE,
-        .pad2 = 0,
-        .cpu = {
-            .package = CPU_PKG_8088,
-            .block = CPU_BLOCK_NONE,
-            .min_bus = 0,
-            .max_bus = 0,
-            .min_voltage = 0,
-            .max_voltage = 0,
-            .min_multi = 0,
-            .max_multi = 0
-        },
-        .bus_flags = MACHINE_PC,
-        .flags = MACHINE_VIDEO,
-        .ram = {
-            .min = 256,
-            .max = 640,
-            .step = 64
-        },
-        .nvrmask = 0,
-        .kbc_device = NULL,
-        .kbc_p1 = 0xff00,
-        .gpio = 0xffffffff,
-        .device = NULL,
         .fdc_device = NULL,
         .sio_device = NULL,
         .vid_device = NULL,
