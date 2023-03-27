@@ -86,6 +86,7 @@ static mouse_t mouse_devices[] = {
     { &mouse_msserial_device     },
     { &mouse_ltserial_device     },
     { &mouse_ps2_device          },
+    { &mouse_wacom_310e_device   },
     { &mouse_wacom_device        },
     { &mouse_wacom_artpad_device },
     { NULL                       }

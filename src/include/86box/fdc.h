@@ -55,6 +55,7 @@ extern int fdc_type;
 #define FDC_FLAG_SEC            0x1000 /* Is Secondary */
 #define FDC_FLAG_TER            0x2000 /* Is Tertiary */
 #define FDC_FLAG_QUA            0x3000 /* Is Quaternary */
+#define FDC_FLAG_5140           0x4000 /* IBM PC Convertible */
 
 typedef struct {
     uint8_t dor, stat, command, processed_cmd, dat, st0, swap, dtl;
@@ -207,6 +208,7 @@ extern const device_t fdc_at_winbond_device;
 extern const device_t fdc_at_nsc_device;
 extern const device_t fdc_dp8473_device;
 extern const device_t fdc_um8398_device;
+extern const device_t fdc_5140_device;
 #endif
 
 #endif /*EMU_FDC_H*/

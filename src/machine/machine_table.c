@@ -34,7 +34,6 @@
 #include <86box/keyboard.h>
 #include <86box/sound.h>
 #include <86box/video.h>
-
 // Temporarily here till we move everything out into the right files
 extern const device_t pcjr_device;
 extern const device_t m19_vid_device;
@@ -51,6 +50,7 @@ extern const device_t vid_200_device;
 extern const device_t vid_ppc512_device;
 extern const device_t vid_device_sl;
 extern const device_t t1200_video_device;
+extern const device_t t1200xe_video_device;
 extern const device_t compaq_plasma_device;
 
 const machine_filter_t machine_types[] = {
@@ -360,6 +360,44 @@ const machine_t machines[] = {
         .type = MACHINE_TYPE_8088,
         .chipset = MACHINE_CHIPSET_DISCRETE,
         .init = machine_xt86_init,
+        .pad = 0,
+        .pad0 = 0,
+        .pad1 = MACHINE_AVAILABLE,
+        .pad2 = 0,
+        .cpu = {
+            .package = CPU_PKG_8088,
+            .block = CPU_BLOCK_NONE,
+            .min_bus = 0,
+            .max_bus = 0,
+            .min_voltage = 0,
+            .max_voltage = 0,
+            .min_multi = 0,
+            .max_multi = 0
+        },
+        .bus_flags = MACHINE_PC,
+        .flags = MACHINE_FLAGS_NONE,
+        .ram = {
+            .min = 256,
+            .max = 640,
+            .step = 64
+        },
+        .nvrmask = 0,
+        .kbc_device = &keyboard_xt86_device,
+        .kbc_p1 = 0xff00,
+        .gpio = 0xffffffff,
+        .device = NULL,
+        .fdc_device = NULL,
+        .sio_device = NULL,
+        .vid_device = NULL,
+        .snd_device = NULL,
+        .net_device = NULL
+    },
+    {
+        .name = "[8088] IBM PC Convertible (1986)",
+        .internal_name = "ibm5140",
+        .type = MACHINE_TYPE_8088,
+        .chipset = MACHINE_CHIPSET_DISCRETE,
+        .init = machine_ibm5140_init,
         .pad = 0,
         .pad0 = 0,
         .pad1 = MACHINE_AVAILABLE,
@@ -1764,6 +1802,44 @@ const machine_t machines[] = {
         .net_device = NULL
     },
     {
+        .name = "[8088] IBM PC Convertible",
+        .internal_name = "ibm5140",
+        .type = MACHINE_TYPE_8088,
+        .chipset = MACHINE_CHIPSET_DISCRETE,
+        .init = machine_ibm5140_init,
+        .pad = 0,
+        .pad0 = 0,
+        .pad1 = MACHINE_AVAILABLE,
+        .pad2 = 0,
+        .cpu = {
+            .package = CPU_PKG_8088,
+            .block = CPU_BLOCK_NONE,
+            .min_bus = 0,
+            .max_bus = 0,
+            .min_voltage = 0,
+            .max_voltage = 0,
+            .min_multi = 0,
+            .max_multi = 0
+        },
+        .bus_flags = MACHINE_PC,
+        .flags = MACHINE_VIDEO,
+        .ram = {
+            .min = 256,
+            .max = 640,
+            .step = 64
+        },
+        .nvrmask = 0,
+        .kbc_device = NULL,
+        .kbc_p1 = 0xff00,
+        .gpio = 0xffffffff,
+        .device = NULL,
+        .fdc_device = NULL,
+        .sio_device = NULL,
+        .vid_device = NULL,
+        .snd_device = NULL,
+        .net_device = NULL
+    },
+    {
         .name = "[GC100A] Philips P3120",
         .internal_name = "p3120",
         .type = MACHINE_TYPE_8088,
@@ -3008,6 +3084,44 @@ const machine_t machines[] = {
         .net_device = NULL
     },
     /* This has Toshiba's proprietary KBC, which is already implemented. */
+    {
+        .name = "[ISA] Toshiba T1200XE",
+        .internal_name = "t1200xe",
+        .type = MACHINE_TYPE_286,
+        .chipset = MACHINE_CHIPSET_PROPRIETARY,
+        .init = machine_xt_t1200xe_init,
+        .pad = 0,
+        .pad0 = 0,
+        .pad1 = MACHINE_AVAILABLE,
+        .pad2 = 0,
+        .cpu = {
+            .package = CPU_PKG_286,
+            .block = CPU_BLOCK_NONE,
+            .min_bus = 0,
+            .max_bus = 0,
+            .min_voltage = 0,
+            .max_voltage = 0,
+            .min_multi = 0,
+            .max_multi = 0
+        },
+        .bus_flags = MACHINE_PC,
+        .flags = MACHINE_VIDEO | MACHINE_MFM,
+        .ram = {
+            .min = 1024,
+            .max = 5120,
+            .step = 1024
+        },
+        .nvrmask = 63,
+        .kbc_device = &keyboard_xt_t1x00_device,
+        .kbc_p1 = 0xff00,
+        .gpio = 0xffffffff,
+        .device = &t1200xe_video_device,
+        .fdc_device = NULL,
+        .sio_device = NULL,
+        .vid_device = NULL,
+        .snd_device = NULL,
+        .net_device = NULL
+    },
     {
         .name = "[ISA] Toshiba T3100e",
         .internal_name = "t3100e",

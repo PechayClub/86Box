@@ -52,13 +52,14 @@ extern const device_t st506_xt_toshiba_t1200_device;      /* st506_xt_toshiba_t1
 extern const device_t esdi_at_wd1007vse1_device; /* esdi_at */
 extern const device_t esdi_ps2_device;           /* esdi_mca */
 
-extern const device_t ide_isa_device;         /* isa_ide */
-extern const device_t ide_isa_2ch_device;     /* isa_ide_2ch */
-extern const device_t ide_isa_2ch_opt_device; /* isa_ide_2ch_opt */
-extern const device_t ide_vlb_device;         /* vlb_ide */
-extern const device_t ide_vlb_2ch_device;     /* vlb_ide_2ch */
-extern const device_t ide_pci_device;         /* pci_ide */
-extern const device_t ide_pci_2ch_device;     /* pci_ide_2ch */
+extern const device_t ide_isa_device;              /* isa_ide */
+extern const device_t ide_isa_2ch_device;          /* isa_ide_2ch */
+extern const device_t ide_isa_2ch_opt_device;      /* isa_ide_2ch_opt */
+extern const device_t ide_xt_toshiba_t1200xe_device; /* ide_xt_toshiba_t1200xe */
+extern const device_t ide_vlb_device;              /* vlb_ide */
+extern const device_t ide_vlb_2ch_device;          /* vlb_ide_2ch */
+extern const device_t ide_pci_device;              /* pci_ide */
+extern const device_t ide_pci_2ch_device;          /* pci_ide_2ch */
 
 extern const device_t ide_cmd640_vlb_device;                /* CMD PCI-640B VLB */
 extern const device_t ide_cmd640_vlb_178_device;            /* CMD PCI-640B VLB (Port 178h) */

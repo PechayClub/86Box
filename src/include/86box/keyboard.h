@@ -176,6 +176,7 @@ extern const device_t keyboard_ps2_ami_pci_device;
 extern const device_t keyboard_ps2_intel_ami_pci_device;
 extern const device_t keyboard_ps2_acer_pci_device;
 extern const device_t keyboard_ps2_ali_pci_device;
+extern const device_t keyboard_ibm5140_device;
 #endif /*EMU_DEVICE_H*/
 
 extern void     keyboard_init(void);

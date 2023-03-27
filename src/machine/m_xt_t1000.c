@@ -171,6 +171,7 @@ typedef struct {
     fdc_t *fdc;
 
     nvr_t nvr;
+
     int   is_t1200;
 } t1000_t;
 
@@ -962,6 +963,74 @@ machine_xt_t1200_init(const machine_t *model)
 
     if (hdc_current <= 1)
         device_add(&st506_xt_toshiba_t1200_device);
+
+    return ret;
+}
+
+int
+machine_xt_t1200xe_init(const machine_t *model)
+{
+    int pg;
+
+    int ret;
+
+    ret = bios_load_linear("roms/machines/t1200xe/toshiba-t1200xe-083A.BIN",
+                           0x000f0000, 65536, 0);
+
+    if (ret) {
+        bios_load_aux_linear("roms/machines/t1200xe/toshiba-t1200xe-083B.BIN",
+                           0x00ff0000, 65536, 0);
+    }
+
+    if (bios_only || !ret)
+        return ret;
+
+    memset(&t1000, 0x00, sizeof(t1000));
+    t1000.is_t1200       = 1;
+    t1000.ems_port_index = 7; /* EMS disabled */
+
+    /* Load the T1000 CGA Font ROM. */
+    loadfont("roms/machines/t1000/t1000font.bin", 2);
+
+    /* Map the EMS page frame */
+    for (pg = 0; pg < 4; pg++) {
+        mem_mapping_add(&t1000.mapping[pg],
+                        0xc0000 + (0x8000 * pg), 131072,
+                        ems_read_ram, ems_read_ramw, ems_read_raml,
+                        ems_write_ram, ems_write_ramw, ems_write_raml,
+                        NULL, MEM_MAPPING_EXTERNAL, &t1000);
+
+        /* Start them all off disabled */
+        mem_mapping_disable(&t1000.mapping[pg]);
+    }
+
+    /* System control functions, and add-on memory board */
+    io_sethandler(0xe0, 16,
+                  read_ctl, NULL, NULL, write_ctl, NULL, NULL, &t1000);
+
+    machine_common_init(model);
+
+    mem_mapping_add(&t1000.nvr_mapping,
+                    0x000e8000, 32768,
+                    read_t1200_nvram, NULL, NULL,
+                    write_t1200_nvram, NULL, NULL,
+                    NULL, MEM_MAPPING_EXTERNAL, &t1000);
+
+    pit_devs[0].set_out_func(pit_devs[0].data, 1, pit_refresh_timer_xt);
+    device_add(&keyboard_xt_t1x00_device);
+    t1000.fdc = device_add(&fdc_xt_t1x00_device);
+    nmi_init();
+
+    tc8521_init(&t1000.nvr, model->nvrmask + 1);
+
+    t1200_nvr_load();
+    nvr_set_ven_save(t1200_nvr_save);
+
+    if (gfxcard[0] == VID_INTERNAL)
+        device_add(&t1200xe_video_device);
+
+    if (hdc_current <= 1)
+        device_add(&ide_xt_toshiba_t1200xe_device);
 
     return ret;
 }

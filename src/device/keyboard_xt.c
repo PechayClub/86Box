@@ -67,6 +67,7 @@
 #define KBD_TYPE_ZENITH   9
 #define KBD_TYPE_PRAVETZ  10
 #define KBD_TYPE_XTCLONE  11
+#define KBD_TYPE_IBM5140  12
 
 typedef struct {
     int want_irq;
@@ -566,7 +567,7 @@ kbd_write(uint16_t port, uint8_t val, void *priv)
             break;
 #endif
 
-        case 0xc0 ... 0xcf: /* Pravetz Flags */
+        case 0xc0 : 0xcf; /* Pravetz Flags */
             kbd_log("XTkbd: Port %02X out: %02X\n", port, val);
             if (kbd->type == KBD_TYPE_PRAVETZ) {
                 bit                = (port >> 1) & 0x07;
@@ -1056,6 +1057,21 @@ const device_t keyboard_xtclone_device = {
     .internal_name = "keyboard_xtclone",
     .flags         = 0,
     .local         = KBD_TYPE_XTCLONE,
+    .init          = kbd_init,
+    .close         = kbd_close,
+    .reset         = kbd_reset,
+    { .available = NULL },
+    .speed_changed = NULL,
+    .force_redraw  = NULL,
+    .config        = NULL
+};
+
+
+const device_t keyboard_ibm5140_device = {
+    .name          = "IBM PC Convertible Keyboard",
+    .internal_name = "keyboard_ibm5140",
+    .flags         = 0,
+    .local         = KBD_TYPE_IBM5140,
     .init          = kbd_init,
     .close         = kbd_close,
     .reset         = kbd_reset,

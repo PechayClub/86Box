@@ -35,7 +35,8 @@ enum wacom_cmd_set {
 };
 
 enum wacom_tablet_type {
-    WACOM_TYPE_IISONLY = 0,
+    WACOM_TYPE_310C = 0,
+    WACOM_TYPE_IISONLY = 1,
     WACOM_TYPE_IV,
 };
 
@@ -48,6 +49,11 @@ typedef struct wacom_tablet_id {
     char id[64];
     int type;
 } wacom_tablet_id;
+
+static const wacom_tablet_id sd310_id = {
+    .id = "~#SD310E V3.3.1.01\r",
+    .type = WACOM_TYPE_310C
+};
 
 static const wacom_tablet_id sd510_id = {
     .id = "~#SD51C V3.2.1.01\r",
@@ -679,11 +685,25 @@ static const device_config_t wacom_config[] = {
   // clang-format on
 };
 
+const device_t mouse_wacom_310e_device = {
+    .name          = "Wacom SD-310E",
+    .internal_name = "wacom_serial_310E",
+    .flags         = DEVICE_COM,
+    .local         = (uintptr_t)&sd310_id,
+    .init          = wacom_init,
+    .close         = wacom_close,
+    .reset         = NULL,
+    { .poll = wacom_poll },
+    .speed_changed = wacom_speed_changed,
+    .force_redraw  = NULL,
+    .config        = wacom_config
+};
+
 const device_t mouse_wacom_device = {
     .name          = "Wacom SD-510C",
     .internal_name = "wacom_serial",
     .flags         = DEVICE_COM,
-    .local         = 0,
+    .local         = (uintptr_t)&sd510_id,
     .init          = wacom_init,
     .close         = wacom_close,
     .reset         = NULL,

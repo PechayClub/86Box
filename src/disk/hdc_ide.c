@@ -3276,3 +3276,17 @@ const device_t ide_qua_pnp_device = {
     .force_redraw  = NULL,
     .config        = ide_qua_config
 };
+
+const device_t ide_xt_toshiba_t1200xe_device = {
+    .name          = "Toshiba T1200XE IDE Fixed Disk Adapter",
+    .internal_name = "ide_xt_toshiba_t1200xe",
+    .flags         = DEVICE_ISA,
+    .local         = 2,
+    .init          = ide_init,
+    .close         = ide_close,
+    .reset         = ide_reset,
+    { .available = NULL },
+    .speed_changed = NULL,
+    .force_redraw  = NULL,
+    .config        = NULL
+};
