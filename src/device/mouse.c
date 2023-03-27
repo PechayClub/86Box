@@ -40,11 +40,10 @@ int mouse_x,
     mouse_buttons,
     mouse_mode,
     mouse_tablet_in_proximity = 0,
-    tablet_tool_type = 1; /* 0 = Puck/Cursor, 1 = Pen */
+    tablet_tool_type          = 1; /* 0 = Puck/Cursor, 1 = Pen */
 
 double mouse_x_abs,
-       mouse_y_abs;
-
+    mouse_y_abs;
 
 static const device_t mouse_none_device = {
     .name          = "None",
@@ -76,19 +75,21 @@ static const device_t mouse_internal_device = {
 
 static mouse_t mouse_devices[] = {
     // clang-format off
-    { &mouse_none_device      },
-    { &mouse_internal_device  },
-    { &mouse_logibus_device   },
-    { &mouse_msinport_device  },
+    { &mouse_none_device         },
+    { &mouse_internal_device     },
+    { &mouse_logibus_device      },
+    { &mouse_msinport_device     },
 #if 0
-    { &mouse_genibus_device   },
+    { &mouse_genibus_device      },
 #endif
-    { &mouse_mssystems_device },
-    { &mouse_msserial_device  },
-    { &mouse_ltserial_device  },
-    { &mouse_ps2_device       },
-    { &mouse_wacom_device     },
-    { NULL                    }
+    { &mouse_mssystems_device    },
+    { &mouse_msserial_device     },
+    { &mouse_ltserial_device     },
+    { &mouse_ps2_device          },
+    { &mouse_wacom_310e_device   },
+    { &mouse_wacom_device        },
+    { &mouse_wacom_artpad_device },
+    { NULL                       }
     // clang-format on
 };
 

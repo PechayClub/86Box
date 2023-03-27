@@ -54,6 +54,7 @@
 
 #define T1000_XSIZE 640
 #define T1000_YSIZE 200
+#define T1200XE_YSIZE 400
 
 /* Mapping of attributes to colours */
 static uint32_t blue, grey;
@@ -121,6 +122,8 @@ typedef struct t1000_t {
     uint8_t backlight, invert;
 
     uint8_t *vram;
+
+    int is_t1200xe;
 } t1000_t;
 
 static void    t1000_recalctimings(t1000_t *t1000);
@@ -505,24 +508,44 @@ t1000_poll(void *p)
 
         if (t1000->displine == 200) {
             /* Hardcode 640x200 window size */
-            if ((T1000_XSIZE != xsize) || (T1000_YSIZE != ysize) || video_force_resize_get()) {
-                xsize = T1000_XSIZE;
-                ysize = T1000_YSIZE;
-                if (xsize < 64)
-                    xsize = 656;
-                if (ysize < 32)
-                    ysize = 200;
-                set_screen_size(xsize, ysize);
+            if (t1000->is_t1200xe) {
+                if ((T1000_XSIZE != xsize) || (T1200XE_YSIZE != ysize) || video_force_resize_get()) {
+                    xsize = T1000_XSIZE;
+                    ysize = T1000_YSIZE;
+                    if (xsize < 64)
+                        xsize = 656;
+                    if (ysize < 32)
+                        ysize = 400;
+                    set_screen_size(xsize, ysize);
 
-                if (video_force_resize_get())
-                    video_force_resize_set(0);
+                    if (video_force_resize_get())
+                        video_force_resize_set(0);
+            } else {
+                if ((T1000_XSIZE != xsize) || (T1000_YSIZE != ysize) || video_force_resize_get()) {
+                    xsize = T1000_XSIZE;
+                    ysize = T1000_YSIZE;
+                    if (xsize < 64)
+                        xsize = 656;
+                    if (ysize < 32)
+                        ysize = 200;
+                    set_screen_size(xsize, ysize);
+
+                    if (video_force_resize_get())
+                        video_force_resize_set(0);
+                }
             }
             video_blit_memtoscreen(0, 0, xsize, ysize);
 
             frames++;
             /* Fixed 640x200 resolution */
-            video_res_x = T1000_XSIZE;
-            video_res_y = T1000_YSIZE;
+            
+            if (t1000->is_t1200xe) {
+                video_res_x = T1000_XSIZE;
+                video_res_y = T1200XE_YSIZE;
+            } else {
+                video_res_x = T1000_XSIZE;
+                video_res_y = T1000_YSIZE;
+            }
 
             if (t1000->cga.cgamode & 0x02) {
                 if (t1000->cga.cgamode & 0x10)
@@ -530,9 +553,11 @@ t1000_poll(void *p)
                 else
                     video_bpp = 2;
 
-            } else
+            } else {
                 video_bpp = 0;
+            }
             t1000->cga.cgablink++;
+            }
         }
     }
 }
@@ -675,9 +700,50 @@ t1000_init(const device_t *info)
     t1000->cga.vram      = t1000->vram;
     t1000->enabled       = 1;
     t1000->video_options = 0x01;
+    t1000->is_t1200xe    = 0;
     language             = device_get_config_int("display_language") ? 2 : 0;
     return t1000;
 }
+
+static void *
+t1200xe_init(const device_t *info)
+{
+    t1000_t *t1000 = malloc(sizeof(t1000_t));
+    memset(t1000, 0, sizeof(t1000_t));
+    loadfont("roms/machines/t1000/t1000font.bin", 8);
+    cga_init(&t1000->cga);
+    video_inform(VIDEO_FLAG_TYPE_CGA, &timing_t1000);
+
+    t1000->internal = 1;
+
+    t1000->backlight = device_get_config_int("backlight");
+    t1000->invert    = device_get_config_int("invert");
+
+    /* 16k video RAM */
+    t1000->vram = malloc(0x8000);
+
+    timer_set_callback(&t1000->cga.timer, t1000_poll);
+    timer_set_p(&t1000->cga.timer, t1000);
+
+    /* Occupy memory between 0xB8000 and 0xBFFFF */
+    mem_mapping_add(&t1000->mapping, 0xb8000, 0x8000, t1000_read, NULL, NULL, t1000_write, NULL, NULL, NULL, 0, t1000);
+    /* Respond to CGA I/O ports */
+    io_sethandler(0x03c0, 0x0030, t1000_in, NULL, NULL, t1000_out, NULL, NULL, t1000);
+
+    /* Default attribute mapping is 4 */
+    t1000->attrmap = 4;
+    t1000_recalcattrs(t1000);
+
+    /* Start off in 80x25 text mode */
+    t1000->cga.cgastat   = 0xF4;
+    t1000->cga.vram      = t1000->vram;
+    t1000->enabled       = 1;
+    t1000->video_options = 0x01;
+    t1000->is_t1200xe    = 1;
+    language             = device_get_config_int("display_language") ? 2 : 0;
+    return t1000;
+}
+
 
 static void
 t1000_close(void *p)
@@ -746,6 +812,20 @@ const device_t t1200_video_device = {
     .flags         = 0,
     .local         = 0,
     .init          = t1000_init,
+    .close         = t1000_close,
+    .reset         = NULL,
+    { .available = NULL },
+    .speed_changed = t1000_speed_changed,
+    .force_redraw  = NULL,
+    .config        = t1000_config
+};
+
+const device_t t1200xe_video_device = {
+    .name          = "Toshiba T1200XE Video",
+    .internal_name = "t1200xe_video",
+    .flags         = 0,
+    .local         = 0,
+    .init          = t1200xe_init,
     .close         = t1000_close,
     .reset         = NULL,
     { .available = NULL },

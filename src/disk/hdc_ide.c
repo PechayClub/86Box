@@ -737,7 +737,7 @@ ide_set_signature(ide_t *ide)
         ide->secount            = ide->sc->phase;
         ide->cylinder           = ide->sc->request_length;
     } else {
-        ide->secount  = 1;
+        ide->secount = 1;
         // ide->cylinder = ((ide->type == IDE_HDD) ? 0 : 0xFFFF);
         ide->cylinder = ((ide->type == IDE_HDD) ? 0 : 0x7F7F);
         if (ide->type == IDE_HDD)
@@ -1919,9 +1919,9 @@ ide_readb(uint16_t addr, void *priv)
     addr &= 0xFFF7;
 
     if ((ide->type == IDE_NONE) && ((ide_drives[ch ^ 1]->type == IDE_NONE) || !(ch & 1)))
-        absent = 1;    /* Absent and is master or both are absent. */
+        absent = 1; /* Absent and is master or both are absent. */
     else if ((ide->type == IDE_NONE) && (ch & 1))
-        absent = 2;    /* Absent and is slave and master is present. */
+        absent = 2; /* Absent and is slave and master is present. */
 
     switch (addr & 0x7) {
         case 0x0: /* Data */
@@ -3275,4 +3275,18 @@ const device_t ide_qua_pnp_device = {
     .speed_changed = NULL,
     .force_redraw  = NULL,
     .config        = ide_qua_config
+};
+
+const device_t ide_xt_toshiba_t1200xe_device = {
+    .name          = "Toshiba T1200XE IDE Fixed Disk Adapter",
+    .internal_name = "ide_xt_toshiba_t1200xe",
+    .flags         = DEVICE_ISA,
+    .local         = 2,
+    .init          = ide_init,
+    .close         = ide_close,
+    .reset         = ide_reset,
+    { .available = NULL },
+    .speed_changed = NULL,
+    .force_redraw  = NULL,
+    .config        = NULL
 };

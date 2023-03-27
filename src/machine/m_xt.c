@@ -629,3 +629,26 @@ machine_xt_pb8810_init(const machine_t *model)
 
     return ret;
 }
+
+int
+machine_ibm5140_init(const machine_t *model)
+{
+    int ret;
+
+    ret = bios_load_linear("roms/machines/ibm5140/7396917.bin",
+                          0x000f0000, 32768, 0);
+    if (ret) {
+        bios_load_aux_linear("roms/machines/ibm5140/7396918.bin",
+                          0x000f8000, 32768, 0);
+    }
+
+    if (bios_only || !ret)
+        return ret;
+
+    device_add(&keyboard_ibm5140_device);
+    device_add(&fdc_5140_device);
+
+    machine_xt_common_init(model);
+
+    return ret;
+}

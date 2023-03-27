@@ -817,6 +817,8 @@ extern int machine_xt_iskra3104_init(const machine_t *);
 extern int machine_xt_pravetz16_imko4_init(const machine_t *);
 extern int machine_xt_micoms_xl7turbo_init(const machine_t *);
 
+extern int machine_ibm5140_init(const machine_t *);
+
 /* m_xt_compaq.c */
 extern int machine_xt_compaq_deskpro_init(const machine_t *);
 extern int machine_xt_compaq_portable_init(const machine_t *);
@@ -833,6 +835,7 @@ extern int machine_xt_p3120_init(const machine_t *);
 /* m_xt_t1000.c */
 extern int machine_xt_t1000_init(const machine_t *);
 extern int machine_xt_t1200_init(const machine_t *);
+extern int machine_xt_t1200xe_init(const machine_t *);
 
 /* m_xt_zenith.c */
 extern int machine_xt_z184_init(const machine_t *);

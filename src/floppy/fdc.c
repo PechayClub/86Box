@@ -2394,6 +2394,20 @@ const device_t fdc_xt_device = {
     .config        = NULL
 };
 
+const device_t fdc_5140_device = {
+    .name          = "5140 Floppy Drive Controller",
+    .internal_name = "fdc_5140",
+    .flags         = FDC_FLAG_5140,
+    .local         = 0,
+    .init          = fdc_init,
+    .close         = fdc_close,
+    .reset         = fdc_reset,
+    { .available = NULL },
+    .speed_changed = NULL,
+    .force_redraw  = NULL,
+    .config        = NULL
+};
+
 const device_t fdc_xt_sec_device = {
     .name          = "PC/XT Floppy Drive Controller (Secondary)",
     .internal_name = "fdc_xt_sec",

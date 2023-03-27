@@ -42,6 +42,7 @@
 
 extern const device_t t1000_video_device;
 extern const device_t t1200_video_device;
+extern const device_t t1200xe_video_device;
 
 extern void t1000_video_options_set(uint8_t options);
 extern void t1000_video_enable(uint8_t enabled);
@@ -54,5 +55,8 @@ extern void t1000_nvr_save(void);
 
 extern void t1200_nvr_load(void);
 extern void t1200_nvr_save(void);
+
+extern void t1200xe_nvr_load(void);
+extern void t1200xe_nvr_save(void);
 
 #endif /*MACHINE_T1000_H*/

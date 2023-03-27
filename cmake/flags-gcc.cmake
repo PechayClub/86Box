@@ -23,6 +23,11 @@ string(APPEND CMAKE_CXX_FLAGS_DEBUG_INIT        " -ggdb -Og")
 string(APPEND CMAKE_C_FLAGS_OPTIMIZED_INIT      " -march=native -mtune=native -O3 -ffp-contract=fast -flto")
 string(APPEND CMAKE_CXX_FLAGS_OPTIMIZED_INIT    " -march=native -mtune=native -O3 -ffp-contract=fast -flto")
 
+set(CMAKE_MAKE_PROGRAM "C:/Program Files/MSYS2/mingw64/bin/ninja.exe")
+set(FREETYPE_INCLUDE_DIRS_ft2build "C:/Program Files/MSYS2/mingw64/include/freetype2")
+set(FREETYPE_INCLUDE_DIRS_freetype2 "C:/Program Files/MSYS2/mingw64/include/freetype2/freetype")
+set(FREETYPE_LIBRARIES "C:/Program Files/MSYS2/mingw64/lib/pkgconfig/freetype2.pc")
+
 # Set up the variables
 foreach(LANG C;CXX)
     set(CMAKE_${LANG}_FLAGS "$ENV{${LANG}FLAGS} ${CMAKE_${LANG}_FLAGS_INIT}" CACHE STRING "Flags used by the ${LANG} compiler during all build types.")

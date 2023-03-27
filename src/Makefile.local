@@ -119,6 +119,7 @@ STUFF :=
 # -DENABLE_TANDY_LOG=N sets logging level at N.
 # -DENABLE_T1000_LOG=N sets logging level at N.
 # -DENABLE_T3100E_LOG=N sets logging level at N.
+# -DENABLE_T3200SXC_LOG=N sets logging level at N.
 # network/ logging:
 # -DENABLE_3COM503_LOG=N sets logging level at N.
 # -DENABLE_DP8390_LOG=N sets logging level at N.
